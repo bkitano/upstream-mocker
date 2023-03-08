@@ -15,40 +15,19 @@ MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/mocks/europrice.png
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
 SCREEN_SIZE = pyautogui.screenshot().size
 
-codec = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
-out = cv2.VideoWriter('output.avi', codec, 12.0, SCREEN_SIZE)
-
 browser = webbrowser.get(CHROME_PATH)
 browser.open(MOCK_PATH, 1)
 
-screencap = pyautogui.screenshot().convert('RGB') # Image object
-
-''' 
 sleep(1)
+screencap = pyautogui.screenshot().convert('RGB') # Image object
 
 logo_position = library.get_button_coordinates(screencap)
 pyautogui.moveTo(*logo_position, duration=1)
 
-is_recording = True
-start = time()
-
-while is_recording:
-    img = pyautogui.screenshot()
-    frame = np.array(img)
-    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-    out.write(frame)
-
-    if time() - start > 3:
-        is_recording = False
-
-print("getting here")
-out.release()
-cv2.destroyAllWindows()
-'''
-
 # ------------------------------------------------ 
-# need to make a screenshot with the popup
-# darken the image lol
+DARK_IMAGE_FILE_PATH = './dark.png'
 
-dark_screen = library.darken_image(pyautogui.screenshot())
-dark_screen.show()
+dark_screen = library.darken_image(screencap)
+dark_screen.save(DARK_IMAGE_FILE_PATH, 'PNG')
+
+browser.open(DARK_IMAGE_FILE_PATH)
