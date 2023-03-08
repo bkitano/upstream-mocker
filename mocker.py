@@ -1,11 +1,7 @@
 import library
-import pandas as pd
-import numpy as np
-import cv2
 import pyautogui
 import webbrowser
-from time import sleep, time 
-from sklearn.cluster import KMeans
+from time import sleep 
 
 MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/mocks/europrice.png'
 
@@ -31,3 +27,5 @@ dark_screen = library.darken_image(screencap)
 dark_screen.save(DARK_IMAGE_FILE_PATH, 'PNG')
 
 browser.open(DARK_IMAGE_FILE_PATH)
+dark_screencap = pyautogui.screenshot().convert('RGB') # Image object
+
