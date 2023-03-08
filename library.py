@@ -45,12 +45,29 @@ def get_button_coordinates(train_image_as_pil: Image, query_image_path=LOGO_PATH
     match_x, match_y = get_dominant_cluster_center(train_points)
 
     # map the image coords to the screen coords
-    screen_x, screen_y = SCREEN_SIZE
-    image_x, image_y = train_image_as_pil.size
+    return map_image_coords_to_screen_coords((match_x, match_y), train_image_as_pil.size)
+    
 
-    mapped_x = match_x / image_x * screen_x
-    mapped_y = match_y / image_y * screen_y
-    return (mapped_x,mapped_y)
+def map_image_coords_to_screen_coords(image_coords, image_size, screen_size=SCREEN_SIZE):
+    screen_width, screen_height = screen_size
+    image_width, image_height = image_size
+    image_x, image_y = image_coords
+
+    screen_x = image_x / image_width * screen_width
+    screen_y = image_y / image_height * screen_height
+    
+    return (screen_x,screen_y)
+
+def map_screen_cords_to_image_coords(screen_coords, image_size, screen_size=SCREEN_SIZE):
+    screen_width, screen_height = screen_size
+    image_width, image_height = image_size
+    screen_x, screen_y = screen_coords
+
+    image_x = screen_x / screen_width * image_width
+    image_y = screen_y / screen_height * image_height
+    
+    return (int(image_x),int(image_y))
+
 
 # debugging
 # [plt.plot(*point, marker='o', color='blue', markersize=1) for point in train_points]
