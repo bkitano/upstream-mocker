@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 import pyautogui
 from sklearn.cluster import KMeans
-from PIL import Image
+from PIL import Image, ImageEnhance
 
 MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/Slice-1.png'
 LOGO_PATH = '../checkout_logo.png'
@@ -57,3 +57,11 @@ def get_button_coordinates(train_image_as_pil: Image, query_image_path=LOGO_PATH
 # plt.plot(*likely_location_of_logo, marker='o', color='pink', markersize=5)
 # plt.imshow(screencap)
 # plt.show()
+
+'''
+this method darkens an image
+'''
+def darken_image(img: Image):
+    brightness = ImageEnhance.Brightness(img)
+    new_image = brightness.enhance(.4)
+    return new_image

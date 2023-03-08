@@ -20,11 +20,12 @@ out = cv2.VideoWriter('output.avi', codec, 12.0, SCREEN_SIZE)
 
 browser = webbrowser.get(CHROME_PATH)
 browser.open(MOCK_PATH, 1)
-sleep(1)
-
-cv2.namedWindow("Recording", cv2.WINDOW_NORMAL)
 
 screencap = pyautogui.screenshot().convert('RGB') # Image object
+
+''' 
+sleep(1)
+
 logo_position = library.get_button_coordinates(screencap)
 pyautogui.moveTo(*logo_position, duration=1)
 
@@ -37,15 +38,17 @@ while is_recording:
     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     out.write(frame)
 
-    cv2.imshow('Recording', frame)
-
     if time() - start > 3:
         is_recording = False
 
 print("getting here")
 out.release()
 cv2.destroyAllWindows()
+'''
 
 # ------------------------------------------------ 
 # need to make a screenshot with the popup
 # darken the image lol
+
+dark_screen = library.darken_image(pyautogui.screenshot())
+dark_screen.show()
