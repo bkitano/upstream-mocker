@@ -4,15 +4,8 @@ import cv2
 import pyautogui
 from PIL import Image
 
-MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/mocks/europrice.png'
-
-# MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/Slice-1.png'
-# MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/mocks/numilk.png'
-
 # need to tweak these
 # the video duration needs to last as long as the desired thing that you're animating
-VIDEO_DURATION = 5.0
-
 recording_duration = 5.0
 RECORDING_FRAME_RATE = 2.5
 total_frames_to_record_at_regular_speed = RECORDING_FRAME_RATE * recording_duration
@@ -53,7 +46,3 @@ while is_recording:
 print("stopped recording")
 
 out.release()
-
-# ------------------------------------------------ 
-# need to make a screenshot with the popup
-# darken the image lol
