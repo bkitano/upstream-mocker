@@ -23,7 +23,7 @@ def get_dominant_cluster_center(points):
 '''
 returns the location of the object on the page (scale invariant)
 '''
-def get_button_coordinates(train_image_as_pil: Image, query_image_path, screen_size):
+def get_button_coordinates(train_image_as_pil: Image, query_image_path, screen_size, debug=False):
 
     # # scale invariant icon finder
     sift = cv2.SIFT_create()
@@ -46,10 +46,11 @@ def get_button_coordinates(train_image_as_pil: Image, query_image_path, screen_s
     match_x, match_y = get_dominant_cluster_center(train_points)
 
     # debugging
-    [plt.plot(*point, marker='o', color='blue', markersize=1) for point in train_points]
-    plt.plot(match_x,match_y, marker='x', color='pink', markersize=3)
-    plt.imshow(train_image_as_pil)
-    plt.show()
+    if debug:
+        [plt.plot(*point, marker='o', color='blue', markersize=1) for point in train_points]
+        plt.plot(match_x,match_y, marker='x', color='pink', markersize=3)
+        plt.imshow(train_image_as_pil)
+        plt.show()
 
     # map the image coords to the screen coords
     return map_image_coords_to_screen_coords((match_x, match_y), train_image_as_pil.size, screen_size)
