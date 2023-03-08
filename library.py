@@ -4,9 +4,9 @@ import cv2
 import pyautogui
 from sklearn.cluster import KMeans
 from PIL import Image, ImageEnhance
+import matplotlib.pyplot as plt
 
 MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/Slice-1.png'
-LOGO_PATH = '../checkout_logo.png'
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
 RECORDING_FRAME_RATE = 2.5
 
@@ -23,7 +23,7 @@ def get_dominant_cluster_center(points):
 '''
 returns the location of the object on the page (scale invariant)
 '''
-def get_button_coordinates(train_image_as_pil: Image, query_image_path=LOGO_PATH):
+def get_button_coordinates(train_image_as_pil: Image, query_image_path, screen_size):
 
     # # scale invariant icon finder
     sift = cv2.SIFT_create()
@@ -42,10 +42,17 @@ def get_button_coordinates(train_image_as_pil: Image, query_image_path=LOGO_PATH
     matches = bf.match(q_descriptors, t_descriptors)
 
     train_points = [ t_keypoints[match.trainIdx].pt for match in matches ]
+    print(get_dominant_cluster_center(train_points))
     match_x, match_y = get_dominant_cluster_center(train_points)
 
+    # debugging
+    [plt.plot(*point, marker='o', color='blue', markersize=1) for point in train_points]
+    plt.plot(match_x,match_y, marker='x', color='pink', markersize=3)
+    plt.imshow(train_image_as_pil)
+    plt.show()
+
     # map the image coords to the screen coords
-    return map_image_coords_to_screen_coords((match_x, match_y), train_image_as_pil.size)
+    return map_image_coords_to_screen_coords((match_x, match_y), train_image_as_pil.size, screen_size)
     
 
 def map_image_coords_to_screen_coords(image_coords, image_size, screen_size):
@@ -67,13 +74,6 @@ def map_screen_cords_to_image_coords(screen_coords, image_size, screen_size):
     image_y = screen_y / screen_height * image_height
     
     return (int(image_x),int(image_y))
-
-
-# debugging
-# [plt.plot(*point, marker='o', color='blue', markersize=1) for point in train_points]
-# plt.plot(*likely_location_of_logo, marker='o', color='pink', markersize=5)
-# plt.imshow(screencap)
-# plt.show()
 
 '''
 this method darkens an image

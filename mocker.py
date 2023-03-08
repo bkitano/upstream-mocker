@@ -4,13 +4,13 @@ import pyautogui
 import webbrowser
 from time import sleep 
 
-
+LOGO_PATH = '../checkout_logo.png'
 MOCK_PATH = '/Users/bkitano/Desktop/projects/upstream/Slice-1.png'
 # MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/mocks/numilk.png'
 
 MOCK_URL = 'file://' + MOCK_PATH
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
-SCREEN_SIZE = pyautogui.screenshot().size
+SCREEN_SIZE = tuple(pyautogui.size())
 
 browser = webbrowser.get(CHROME_PATH)
 browser.open(MOCK_URL, 1)
@@ -18,5 +18,5 @@ browser.open(MOCK_URL, 1)
 sleep(1)
 screencap = pyautogui.screenshot().convert('RGB') # Image object
 
-logo_position = library.get_button_coordinates(screencap)
+logo_position = library.get_button_coordinates(screencap, LOGO_PATH, SCREEN_SIZE)
 pyautogui.moveTo(*logo_position, duration=1)
