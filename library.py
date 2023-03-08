@@ -1,13 +1,10 @@
 import pandas as pd
 import numpy as np
 import cv2
-import pyautogui
 from sklearn.cluster import KMeans
 from PIL import Image, ImageEnhance
 import matplotlib.pyplot as plt
 
-MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/Slice-1.png'
-CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
 RECORDING_FRAME_RATE = 2.5
 
 '''
@@ -67,8 +64,8 @@ def map_image_coords_to_screen_coords(image_coords, image_size, screen_size):
     return (screen_x,screen_y)
 
 def map_screen_cords_to_image_coords(screen_coords, image_size, screen_size):
-    screen_width, screen_height = screen_size
     image_width, image_height = image_size
+    screen_width, screen_height = screen_size
     screen_x, screen_y = screen_coords
 
     image_x = screen_x / screen_width * image_width
@@ -86,14 +83,14 @@ def darken_image(img: Image):
 
 
 '''
-given a frame, this makes a video of that frame for the duration
+given a frame, this makes a .avi video of that frame for the duration.
 '''
 def make_video_from_frame(frame_path, duration, out_name):
     img = cv2.imread(frame_path)
     height, width, layers = img.shape
     
     codec = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
-    out = cv2.VideoWriter(out_name + '.avi', codec, RECORDING_FRAME_RATE, (width, height))
+    out = cv2.VideoWriter(out_name, codec, RECORDING_FRAME_RATE, (width, height))
 
     for i in range(int(duration * RECORDING_FRAME_RATE)):
         out.write(img)
