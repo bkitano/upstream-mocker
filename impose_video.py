@@ -16,6 +16,7 @@ dark_screen.save(DARK_MOCK_FILE_PATH, 'PNG')
 
 # record video of dark screen, and impose rodrigo's screencap
 rodrigo_clip = VideoFileClip('./popup.mp4', audio=False)
+rodrigo_clip = rodrigo_clip.resize(1.6)
 clip_height, clip_width = rodrigo_clip.size
 
 # make the blur video
@@ -25,19 +26,10 @@ dark_clip = VideoFileClip(DARK_VIDEO_PATH + '.avi')
 img = cv2.imread(DARK_MOCK_FILE_PATH)
 mock_height, mock_width, layers = img.shape
 
-print("mock dimensions")
-print( mock_height)
-print( mock_width)
-
-print("clip dimensions")
-print( clip_height)
-print( clip_width)
-
 clip_position = (
     int(mock_width/2. - clip_width / 2.),
     int( mock_height/2. - clip_height / 2.)
 )
-print(clip_position)
 
 video = CompositeVideoClip([
     dark_clip,
@@ -47,3 +39,4 @@ video = CompositeVideoClip([
 )
 
 video.write_gif('./test.gif', fps=10)
+video.save_frame('./first_frame.png')
