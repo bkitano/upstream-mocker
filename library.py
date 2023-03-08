@@ -8,7 +8,7 @@ from PIL import Image, ImageEnhance
 MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/Slice-1.png'
 LOGO_PATH = '../checkout_logo.png'
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
-SCREEN_SIZE = tuple(pyautogui.size())
+RECORDING_FRAME_RATE = 2.5
 
 '''
 Gets the coordinates of the cluster with the most points.
@@ -48,7 +48,7 @@ def get_button_coordinates(train_image_as_pil: Image, query_image_path=LOGO_PATH
     return map_image_coords_to_screen_coords((match_x, match_y), train_image_as_pil.size)
     
 
-def map_image_coords_to_screen_coords(image_coords, image_size, screen_size=SCREEN_SIZE):
+def map_image_coords_to_screen_coords(image_coords, image_size, screen_size):
     screen_width, screen_height = screen_size
     image_width, image_height = image_size
     image_x, image_y = image_coords
@@ -58,7 +58,7 @@ def map_image_coords_to_screen_coords(image_coords, image_size, screen_size=SCRE
     
     return (screen_x,screen_y)
 
-def map_screen_cords_to_image_coords(screen_coords, image_size, screen_size=SCREEN_SIZE):
+def map_screen_cords_to_image_coords(screen_coords, image_size, screen_size):
     screen_width, screen_height = screen_size
     image_width, image_height = image_size
     screen_x, screen_y = screen_coords
@@ -82,3 +82,19 @@ def darken_image(img: Image):
     brightness = ImageEnhance.Brightness(img)
     new_image = brightness.enhance(.4)
     return new_image
+
+
+'''
+given a frame, this makes a video of that frame for the duration
+'''
+def make_video_from_frame(frame_path, duration, out_name):
+    img = cv2.imread(frame_path)
+    height, width, layers = img.shape
+    
+    codec = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
+    out = cv2.VideoWriter(out_name + '.avi', codec, RECORDING_FRAME_RATE, (width, height))
+
+    for i in range(int(duration * RECORDING_FRAME_RATE)):
+        out.write(img)
+
+    out.release()
