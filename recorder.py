@@ -10,18 +10,20 @@ because RECORDING_FRAME_RATE = 2.5, it looks like refresh rate of the monitor du
 
 to make the motion look more fluid, make the duration of the motion slower, and then increase the playback rate.
 '''
+RECORDING_FRAME_RATE = 2.5
 
 output_path = sys.argv[1]
 # need to tweak these
 # the video duration needs to last as long as the desired thing that you're animating
-recording_duration = 5.0
-playback_rate = 4.
-RECORDING_FRAME_RATE = 2.5
-total_frames_to_record_at_regular_speed = RECORDING_FRAME_RATE * recording_duration
+recording_duration = int(sys.argv[2])
+playback_duration = int(sys.argv[3])
+
+total_number_of_frames = RECORDING_FRAME_RATE * recording_duration
+playback_rate = total_number_of_frames / playback_duration
 
 IMAGE_SIZE = pyautogui.screenshot().size
 SCREEN_SIZE = pyautogui.size()
-CURSOR_SIZE = (50,50)
+CURSOR_SIZE = (30,30)
 
 codec = cv2.VideoWriter_fourcc('M', 'J', 'P', 'G')
 out = cv2.VideoWriter(output_path, codec, playback_rate, IMAGE_SIZE)
@@ -50,7 +52,7 @@ while is_recording:
     total_frames += 1
 
     # fail-safe to stop recording after x seconds
-    if total_frames > total_frames_to_record_at_regular_speed:
+    if total_frames > total_number_of_frames:
         is_recording = False
 
 print("stopped recording")

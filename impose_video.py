@@ -14,6 +14,7 @@ DARK_VIDEO_PATH = './dark_video.avi'
 
 mock_img = Image.open(MOCK_PATH)
 dark_screen = library.darken_image(mock_img)
+# need to superimpose this image on the chrome window
 dark_screen.save(DARK_MOCK_FILE_PATH, 'PNG')
 
 # record video of dark screen, and impose rodrigo's screencap

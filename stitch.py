@@ -12,4 +12,4 @@ final_clip = concatenate_videoclips([
     imposer_clip
 ])
 
-final_clip.write_gif(sys.argv[4], fps=12)
+final_clip.write_gif(sys.argv[4], fps=8)

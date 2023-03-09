@@ -20,4 +20,4 @@ sleep(1)
 screencap = pyautogui.screenshot().convert('RGB') # Image object
 
 logo_position = library.get_button_coordinates(screencap, LOGO_PATH, SCREEN_SIZE)
-pyautogui.moveTo(*logo_position, duration=1)
+pyautogui.moveTo(*logo_position, duration=6)

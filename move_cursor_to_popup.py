@@ -27,4 +27,7 @@ screencap.paste(Image.new(size=(int(screencap.size[0]), int(screencap.size[1]/2 
 
 final_cursor_position = library.get_button_coordinates(screencap, CURSOR_PATH, SCREEN_SIZE)
 
-pyautogui.moveTo(*final_cursor_position, duration=1)
+# we are actually going to want to use an image that is not the actual mouse on it, so we'll need to mask out
+# the cursor from the first frame and open that
+
+pyautogui.moveTo(*final_cursor_position, duration=6)
