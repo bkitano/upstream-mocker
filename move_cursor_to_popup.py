@@ -9,7 +9,7 @@ from PIL import Image
 # get mouse position in second frame, then animate mouse movement
 
 # get first frame of last gif
-FIRST_FRAME_PATH = './first_frame.png'
+FIRST_FRAME_PATH = './overlay.png'
 CURSOR_PATH = './cursor2.png'
 MASKED_FIRST_FRAME_PATH = './masked_first_frame.png'
 
@@ -47,8 +47,8 @@ mock.paste(
     Image.new(
         'RGB',
         size=(50, 50),
-        color=(255, 255, 255)),
-    (int(cursor_image_coords[0]) - 47, int(cursor_image_coords[1]) - 27) # hack
+        color=(252, 252, 252)),
+    (int(cursor_image_coords[0]) - 47, int(cursor_image_coords[1]) - 25) # hack
 )
 mock.save(MASKED_FIRST_FRAME_PATH)
 
