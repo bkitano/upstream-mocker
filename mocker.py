@@ -5,9 +5,9 @@ import webbrowser
 from time import sleep 
 import sys 
 
-LOGO_PATH = '../checkout_logo.png'
+LOGO_PATH = './assets/query_checkout_logo.png'
+
 MOCK_PATH = sys.argv[1]
-# MOCK_PATH = 'file:///Users/bkitano/Desktop/projects/upstream/mocks/numilk.png'
 
 MOCK_URL = 'file://' + MOCK_PATH
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'

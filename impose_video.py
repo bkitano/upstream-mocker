@@ -11,15 +11,18 @@ os.environ["IMAGEIO_FFMPEG_EXE"] = "/usr/bin/ffmpeg"
 
 MOCK_PATH = sys.argv[1]
 IMPOSER_PATH = sys.argv[2]
-DARK_MOCK_FILE_PATH = './dark.png'
-DARK_MOCK_SCREENCAP_PATH = './dark_cap.png'
-DARK_VIDEO_PATH = './dark_video.avi'
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
+DARK_MOCK_FILE_PATH = './outputs/dark.png'
+DARK_MOCK_SCREENCAP_PATH = './outputs/dark_cap.png'
+DARK_VIDEO_PATH = './outputs/dark_video.avi'
+POPUP_VIDEO_PATH = './assets/popup.mp4'
+NO_CHROME_WITH_POPUP_MOCK_PATH = './outputs/overlay.png'
+FIRST_FRAME_PATH = './outputs/first_frame.png'
 
 mock_img = Image.open(MOCK_PATH)
 dark_screen = library.darken_image(mock_img)
 
-rodrigo_clip = VideoFileClip('./popup.mp4', audio=False)
+rodrigo_clip = VideoFileClip(POPUP_VIDEO_PATH, audio=False)
 rodrigo_clip = rodrigo_clip.resize(1.6)
 clip_height, clip_width = rodrigo_clip.size
 
@@ -58,10 +61,10 @@ video = CompositeVideoClip([
 )
 
 video.write_videofile(IMPOSER_PATH, fps=10, codec='mpeg4')
-video.save_frame('./first_frame.png')
+video.save_frame(FIRST_FRAME_PATH)
 
 # crop chrome out of first frame
-overlay_with_chrome = Image.open('./first_frame.png')
+overlay_with_chrome = Image.open(FIRST_FRAME_PATH)
 overlay_with_chrome = overlay_with_chrome.crop(
     (0, 232, overlay_with_chrome.size[0], overlay_with_chrome.size[1] - 120))
-overlay_with_chrome.save('./overlay.png')
+overlay_with_chrome.save(NO_CHROME_WITH_POPUP_MOCK_PATH)

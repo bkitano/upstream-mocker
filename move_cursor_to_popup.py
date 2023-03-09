@@ -9,9 +9,9 @@ from PIL import Image
 # get mouse position in second frame, then animate mouse movement
 
 # get first frame of last gif
-FIRST_FRAME_PATH = './overlay.png'
-CURSOR_PATH = './cursor2.png'
-MASKED_FIRST_FRAME_PATH = './masked_first_frame.png'
+CURSOR_PATH = './assets/query_cursor.png'
+FIRST_FRAME_PATH = './outputs/overlay.png'
+MASKED_FIRST_FRAME_PATH = './outputs/masked_first_frame.png'
 
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
 SCREEN_SIZE = tuple(pyautogui.size())

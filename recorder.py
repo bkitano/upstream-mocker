@@ -12,6 +12,8 @@ to make the motion look more fluid, make the duration of the motion slower, and 
 '''
 RECORDING_FRAME_RATE = 2.5
 
+CURSOR_ICON_PATH = './assets/cursor_icon.png'
+
 output_path = sys.argv[1]
 # need to tweak these
 # the video duration needs to last as long as the desired thing that you're animating
@@ -31,7 +33,7 @@ out = cv2.VideoWriter(output_path, codec, playback_rate, IMAGE_SIZE)
 is_recording = True
 total_frames = 0
 
-cursor_img = Image.open('./cursor.png').convert('RGBA')
+cursor_img = Image.open(CURSOR_ICON_PATH).convert('RGBA')
 cursor_img.thumbnail(CURSOR_SIZE)
 
 # kick off the recording, with stop conditions
