@@ -1,6 +1,6 @@
 import pyautogui
 import library
-import webbrowser 
+import webbrowser
 from time import sleep
 from PIL import Image
 
@@ -11,6 +11,7 @@ from PIL import Image
 # get first frame of last gif
 FIRST_FRAME_PATH = './first_frame.png'
 CURSOR_PATH = './cursor2.png'
+MASKED_FIRST_FRAME_PATH = './masked_first_frame.png'
 
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
 SCREEN_SIZE = tuple(pyautogui.size())
@@ -20,14 +21,38 @@ browser.open(FIRST_FRAME_PATH, 1)
 
 sleep(1)
 screencap = pyautogui.screenshot().convert('RGB')
-screencap.paste(Image.new(size=(int(screencap.size[0]/2 - 400), int(screencap.size[1])),mode=screencap.mode), (0,0))
-screencap.paste(Image.new(size=(int(screencap.size[0]/2 - 400), int(screencap.size[1])),mode=screencap.mode), (int(screencap.size[0]/2 + 400),0))
-screencap.paste(Image.new(size=(int(screencap.size[0]), int(screencap.size[1]/2 - 400)),mode=screencap.mode), (0,0))
-screencap.paste(Image.new(size=(int(screencap.size[0]), int(screencap.size[1]/2 - 400)),mode=screencap.mode), (0,int(screencap.size[1]/2 + 400)))
 
-final_cursor_position = library.get_button_coordinates(screencap, CURSOR_PATH, SCREEN_SIZE)
+screencap.paste(Image.new(size=(int(
+    screencap.size[0]/2 - 400), int(screencap.size[1])), mode=screencap.mode), (0, 0))
+screencap.paste(Image.new(size=(int(screencap.size[0]/2 - 400), int(
+    screencap.size[1])), mode=screencap.mode), (int(screencap.size[0]/2 + 400), 0))
+screencap.paste(Image.new(size=(int(screencap.size[0]), int(
+    screencap.size[1]/2 - 400)), mode=screencap.mode), (0, 0))
+screencap.paste(Image.new(size=(int(screencap.size[0]), int(
+    screencap.size[1]/2 - 400)), mode=screencap.mode), (0, int(screencap.size[1]/2 + 400)))
+
+final_cursor_position = library.get_button_coordinates(
+    screencap, CURSOR_PATH, SCREEN_SIZE)
 
 # we are actually going to want to use an image that is not the actual mouse on it, so we'll need to mask out
 # the cursor from the first frame and open that
+mock = Image.open(FIRST_FRAME_PATH)
+cursor_image_coords = library.get_button_coordinates(
+    Image.open(FIRST_FRAME_PATH),
+    CURSOR_PATH,
+    SCREEN_SIZE,
+    image_coords=True,
+)
+mock.paste(
+    Image.new(
+        'RGB',
+        size=(50, 50),
+        color=(255, 255, 255)),
+    (int(cursor_image_coords[0]) - 47, int(cursor_image_coords[1]) - 27) # hack
+)
+mock.save(MASKED_FIRST_FRAME_PATH)
+
+# white out a circle around the final cursor position
+browser.open(MASKED_FIRST_FRAME_PATH, 1)
 
 pyautogui.moveTo(*final_cursor_position, duration=6)
