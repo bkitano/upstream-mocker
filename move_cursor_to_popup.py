@@ -46,9 +46,9 @@ cursor_image_coords = library.get_button_coordinates(
 mock.paste(
     Image.new(
         'RGB',
-        size=(50, 50),
+        size=(60, 60),
         color=(252, 252, 252)),
-    (int(cursor_image_coords[0]) - 47, int(cursor_image_coords[1]) - 25) # hack
+    (int(cursor_image_coords[0]) - 47, int(cursor_image_coords[1]) - 28) # hack
 )
 mock.save(MASKED_FIRST_FRAME_PATH)
 

@@ -4,6 +4,7 @@ import cv2
 import pyautogui
 from PIL import Image
 import sys
+from time import sleep
 
 '''
 because RECORDING_FRAME_RATE = 2.5, it looks like refresh rate of the monitor during playback is terrible.
@@ -19,6 +20,7 @@ output_path = sys.argv[1]
 # the video duration needs to last as long as the desired thing that you're animating
 recording_duration = int(sys.argv[2])
 playback_duration = int(sys.argv[3])
+delay = int(sys.argv[4])
 
 total_number_of_frames = RECORDING_FRAME_RATE * recording_duration
 playback_rate = total_number_of_frames / playback_duration
@@ -37,6 +39,7 @@ cursor_img = Image.open(CURSOR_ICON_PATH).convert('RGBA')
 cursor_img.thumbnail(CURSOR_SIZE)
 
 # kick off the recording, with stop conditions
+sleep(delay)
 
 # this runs basically every .4 seconds, so the recording frame rate is
 # 2.5 frames/second.
