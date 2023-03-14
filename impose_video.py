@@ -60,7 +60,7 @@ video = CompositeVideoClip([
     size=(mock_width, mock_height)
 )
 
-video.write_videofile(IMPOSER_PATH, fps=10, codec='mpeg4')
+video.write_videofile(IMPOSER_PATH, fps=10, codec='png')
 video.save_frame(FIRST_FRAME_PATH)
 
 # crop chrome out of first frame
