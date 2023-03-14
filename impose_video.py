@@ -16,7 +16,7 @@ DARK_MOCK_FILE_PATH = './outputs/dark.png'
 DARK_MOCK_SCREENCAP_PATH = './outputs/dark_cap.png'
 DARK_VIDEO_PATH = './outputs/dark_video.avi'
 POPUP_VIDEO_PATH = './assets/popup.mp4'
-NO_CHROME_WITH_POPUP_MOCK_PATH = './outputs/overlay.png'
+NO_CHROME_WITH_POPUP_MOCK_PATH = './outputs/popup_with_no_chrome.png'
 FIRST_FRAME_PATH = './outputs/first_frame.png'
 
 mock_img = Image.open(MOCK_PATH)
@@ -64,7 +64,9 @@ video.write_videofile(IMPOSER_PATH, fps=10, codec='mpeg4')
 video.save_frame(FIRST_FRAME_PATH)
 
 # crop chrome out of first frame
+DOCK_MARGIN = 170
+CHROME_AND_TOP_NAV_MARGIN = 234
 overlay_with_chrome = Image.open(FIRST_FRAME_PATH)
 overlay_with_chrome = overlay_with_chrome.crop(
-    (0, 232, overlay_with_chrome.size[0], overlay_with_chrome.size[1] - 120))
+    (0, CHROME_AND_TOP_NAV_MARGIN, overlay_with_chrome.size[0], overlay_with_chrome.size[1] - DOCK_MARGIN))
 overlay_with_chrome.save(NO_CHROME_WITH_POPUP_MOCK_PATH)

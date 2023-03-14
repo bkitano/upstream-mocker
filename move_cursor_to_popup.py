@@ -10,7 +10,7 @@ from PIL import Image
 
 # get first frame of last gif
 CURSOR_PATH = './assets/query_cursor.png'
-FIRST_FRAME_PATH = './outputs/overlay.png'
+FIRST_FRAME_PATH = './outputs/popup_with_no_chrome.png'
 MASKED_FIRST_FRAME_PATH = './outputs/masked_first_frame.png'
 
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
@@ -37,22 +37,32 @@ final_cursor_position = library.get_button_coordinates(
 # we are actually going to want to use an image that is not the actual mouse on it, so we'll need to mask out
 # the cursor from the first frame and open that
 mock = Image.open(FIRST_FRAME_PATH)
+print(mock.size)
+
 cursor_image_coords = library.get_button_coordinates(
-    Image.open(FIRST_FRAME_PATH),
+    mock,
     CURSOR_PATH,
     SCREEN_SIZE,
     image_coords=True,
 )
-mock.paste(
-    Image.new(
-        'RGB',
-        size=(60, 60),
-        color=(252, 252, 252)),
-    (int(cursor_image_coords[0]) - 47, int(cursor_image_coords[1]) - 28) # hack
+print(cursor_image_coords)
+
+cursor_mask_white_square = Image.new(
+    'RGB',
+    size=(60, 60),
+    color=(252, 252, 252)
 )
+
+mock.paste(
+    cursor_mask_white_square,
+    (int(cursor_image_coords[0]) - 47,
+     int(cursor_image_coords[1]) - 28)  # hack
+)
+
+print(mock.size)
+mock.show()
 mock.save(MASKED_FIRST_FRAME_PATH)
 
-# white out a circle around the final cursor position
 browser.open(MASKED_FIRST_FRAME_PATH, 1)
 
 pyautogui.moveTo(*final_cursor_position, duration=6)

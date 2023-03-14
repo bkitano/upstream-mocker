@@ -39,8 +39,8 @@ def get_button_coordinates(train_image_as_pil: Image, query_image_path, screen_s
     matches = bf.match(q_descriptors, t_descriptors)
 
     train_points = [ t_keypoints[match.trainIdx].pt for match in matches ]
-    print(get_dominant_cluster_center(train_points))
     match_x, match_y = get_dominant_cluster_center(train_points)
+    print(match_x, match_y)
 
     # debugging
     if debug:
