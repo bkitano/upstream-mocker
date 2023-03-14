@@ -60,7 +60,6 @@ mock.paste(
 )
 
 print(mock.size)
-mock.show()
 mock.save(MASKED_FIRST_FRAME_PATH)
 
 browser.open(MASKED_FIRST_FRAME_PATH, 1)
