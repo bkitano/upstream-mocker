@@ -64,7 +64,7 @@ blank_popover.save(FILLED_POPOVER_IMAGE_PATH)
 
 # ------------------ VIDEO ---------------------
 
-OVERLAY_DURATION = 4.5
+OVERLAY_DURATION = 2.75
 
 # overlay logo, text file on top of blank popover video
 blank_popover_clip = VideoFileClip('./assets/blank_login_popover.mov')
