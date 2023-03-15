@@ -7,6 +7,10 @@ opener_clip = VideoFileClip(sys.argv[1])
 mover_clip = VideoFileClip(sys.argv[2])
 imposer_clip = VideoFileClip(sys.argv[3])
 
+print("opener", opener_clip.size)
+print("mover", mover_clip.size)
+print("imposer", imposer_clip.size)
+
 final_clip = concatenate_videoclips([
     opener_clip,
     mover_clip,
