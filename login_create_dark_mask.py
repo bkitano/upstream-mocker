@@ -1,8 +1,9 @@
 from PIL import Image
 import library
+import sys
 
-LOGIN_MOCK_PATH = '/Users/bkitano/Desktop/projects/upstream/mocker/slice.png'
-LOGIN_PERMISSIONS_POPVER_PATH = '/Users/bkitano/Desktop/projects/upstream/mocker/assets/masked_popover.png'
+LOGIN_MOCK_PATH = sys.argv[1]
+LOGIN_PERMISSIONS_POPVER_PATH = sys.argv[2]
 DARK_IMAGE_SAVE_PATH = './outputs/dark.png'
 DARK_IMAGE_POPOVER_PATH = './outputs/dark_popover.png'
 
