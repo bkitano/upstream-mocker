@@ -5,7 +5,7 @@ import webbrowser
 from time import sleep 
 import sys 
 
-LOGO_PATH = './assets/query_checkout_logo.png'
+LOGO_PATH = './assets/upstream_logo.png'
 
 MOCK_PATH = sys.argv[1]
 

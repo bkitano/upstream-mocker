@@ -6,7 +6,7 @@ from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 
 # fill_popover.py logo.jpeg Amota\ Group ./outputs/filled_popover.png
 
-BLANK_POPOVER_IMAGE_PATH = './assets/blank_popover.png'
+BLANK_POPOVER_IMAGE_PATH = './assets/login_masked_popover.png'
 box_width, box_height = (384, 384) # the logo
 BOX_CENTER = (310, 478)
 FONT_PATH = './assets/Inter/static/Inter-Regular.ttf'
@@ -67,7 +67,7 @@ blank_popover.save(FILLED_POPOVER_IMAGE_PATH)
 OVERLAY_DURATION = 2.75
 
 # overlay logo, text file on top of blank popover video
-blank_popover_clip = VideoFileClip('./assets/blank_login_popover.mov')
+blank_popover_clip = VideoFileClip('./assets/login_blank_popover.mov')
 blank_popover_clip = blank_popover_clip.resize(blank_popover.size)
 
 logo_clip = ImageClip(np.array(logo))\
