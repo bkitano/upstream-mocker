@@ -15,7 +15,7 @@ CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
 DARK_MOCK_FILE_PATH = './outputs/dark.png'
 DARK_MOCK_SCREENCAP_PATH = './outputs/dark_cap.png'
 DARK_VIDEO_PATH = './outputs/dark_video.avi'
-POPUP_VIDEO_PATH = './assets/popup.mp4'
+POPUP_VIDEO_PATH = './assets/checkout_popup.mp4'
 NO_CHROME_WITH_POPUP_MOCK_PATH = './outputs/popup_with_no_chrome.png'
 FIRST_FRAME_PATH = './outputs/first_frame.png'
 

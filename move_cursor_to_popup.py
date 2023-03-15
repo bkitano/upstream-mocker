@@ -9,7 +9,7 @@ from PIL import Image
 # get mouse position in second frame, then animate mouse movement
 
 # get first frame of last gif
-CURSOR_PATH = './assets/query_cursor.png'
+CURSOR_PATH = './assets/checkout_query_cursor.png'
 FIRST_FRAME_PATH = './outputs/popup_with_no_chrome.png'
 MASKED_FIRST_FRAME_PATH = './outputs/masked_first_frame.png'
 
