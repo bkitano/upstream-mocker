@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 RECORDING_FRAME_RATE = 2.5
 DOCK_MARGIN = 170
 CHROME_AND_TOP_NAV_MARGIN = 234
+CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
 
 '''
 Gets the coordinates of the cluster with the most points.
