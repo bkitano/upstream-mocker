@@ -1,7 +1,7 @@
 from PIL import Image, ImageFont, ImageDraw
 import sys
 import textwrap
-
+import numpy as np
 from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 
 # fill_popover.py logo.jpeg Amota\ Group ./outputs/filled_popover.png
@@ -22,7 +22,7 @@ BUSINESS_NAME = sys.argv[2]
 FILLED_POPOVER_IMAGE_PATH = sys.argv[3]
 
 blank_popover = Image.open(BLANK_POPOVER_IMAGE_PATH).convert('RGBA')
-logo = Image.open(LOGO_PATH)
+logo = Image.open(LOGO_PATH).convert("RGBA")
 logo = logo.resize((box_height, box_width))
 logo_position = (int(BOX_CENTER[0] - box_width/2.),
                  int(BOX_CENTER[1] - box_height/2.))
@@ -60,11 +60,23 @@ for line in lines:
     y_text += (line_height + LINE_SPACING)
 
 blank_popover.paste(text_img, (0,0), text_img)
-blank_popover.show()
 blank_popover.save(FILLED_POPOVER_IMAGE_PATH)
 
-# overlay logo, text file on top of blank popover video
-# blank_popover_clip = VideoFileClip('./assets/blank_login_popover.mov')
-# blank_popover_clip = blank_popover_clip.resize(blank_popover.size)
+# ------------------ VIDEO ---------------------
 
-# logo_clip = ImageClip(logo).set_position(logo_position)
+OVERLAY_DURATION = 4.5
+
+# overlay logo, text file on top of blank popover video
+blank_popover_clip = VideoFileClip('./assets/blank_login_popover.mov')
+blank_popover_clip = blank_popover_clip.resize(blank_popover.size)
+
+logo_clip = ImageClip(np.array(logo))\
+    .set_position(logo_position)\
+    .set_duration(OVERLAY_DURATION)
+
+text_clip = ImageClip(np.array(text_img))\
+    .set_duration(OVERLAY_DURATION)
+
+clip = CompositeVideoClip([blank_popover_clip, logo_clip, text_clip])
+# clip.write_videofile('./outputs/popover.avi', fps=12, codec='rawvideo') # use this for render
+clip.write_videofile('./outputs/popover.mp4', fps=12, codec='mpeg4') # use this for debug
