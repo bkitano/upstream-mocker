@@ -7,7 +7,7 @@ from moviepy.editor import VideoFileClip, CompositeVideoClip, ImageClip
 # fill_popover.py logo.jpeg Amota\ Group ./outputs/filled_popover.png
 
 BLANK_POPOVER_IMAGE_PATH = './assets/blank_popover.png'
-box_width, box_height = (384, 384)
+box_width, box_height = (384, 384) # the logo
 BOX_CENTER = (310, 478)
 FONT_PATH = './assets/Inter/static/Inter-Regular.ttf'
 FONT_SIZE = 35
@@ -78,5 +78,5 @@ text_clip = ImageClip(np.array(text_img))\
     .set_duration(OVERLAY_DURATION)
 
 clip = CompositeVideoClip([blank_popover_clip, logo_clip, text_clip])
-# clip.write_videofile('./outputs/popover.avi', fps=12, codec='rawvideo') # use this for render
-clip.write_videofile('./outputs/popover.mp4', fps=12, codec='mpeg4') # use this for debug
+# clip.write_videofile('./outputs/popover.avi', fps=12, codec='png') # use this for render
+clip.write_videofile('./outputs/filled_popover.mp4', fps=12, codec='mpeg4') # use this for debug
