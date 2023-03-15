@@ -78,5 +78,5 @@ text_clip = ImageClip(np.array(text_img))\
     .set_duration(OVERLAY_DURATION)
 
 clip = CompositeVideoClip([blank_popover_clip, logo_clip, text_clip])
-# clip.write_videofile('./outputs/popover.avi', fps=12, codec='png') # use this for render
-clip.write_videofile('./outputs/filled_popover.mp4', fps=12, codec='mpeg4') # use this for debug
+clip.write_videofile('./outputs/filled_popover.avi', fps=12, codec='png') # use this for render
+# clip.write_videofile('./outputs/filled_popover.mp4', fps=12, codec='mpeg4') # use this for debug

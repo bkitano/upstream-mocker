@@ -21,5 +21,5 @@ sleep 3
 python3 login_move_cursor_to_popup.py "$CURSOR_POSITION"
 sleep 10
 
-python3 stitch.py ./outputs/login_opener.avi ./outputs/mock_with_popover.mp4 ./test.gif
+python3 stitch.py ./outputs/login_opener.avi ./outputs/mock_with_popover.avi ./test.gif
 # rm -rf ./outputs/*
