@@ -7,11 +7,37 @@ import cv2
 # load mock
 
 CURSOR_ICON_PATH = './assets/upstream_logo.png'
+MOCK_PATH = './slice.png'
 
-start_mock = Image.open('./slice.png').convert('RGBA')
+frame_rate = 15
+start_duration = .2
+
+start_mock = Image.open(MOCK_PATH).convert('RGBA')
 
 start_coords = library.get_button_coordinates(
     start_mock, CURSOR_ICON_PATH, image_coords=True, screen_size=start_mock.size)
+
+start_clip = ImageClip(MOCK_PATH, duration=2)
+
+# start mouse on a random spot nearby
+cursor_start_coords = tuple((np.array(start_coords) + 100 * np.random.randn(*np.array(start_coords).shape)).astype(int))
+
+start_get_position = library.linear_interpolation(
+    cursor_start_coords, start_coords, frame_rate, start_duration)
+
+CURSOR_PATH = './assets/cursor_icon.png'
+cursor_img = Image.open(CURSOR_PATH).convert('RGBA').resize((30, 30))
+
+def start_make_frame(t):
+    frame = start_mock.copy()
+    frame.paste(cursor_img, tuple(start_get_position(t).astype(int)), cursor_img)
+    return cv2.cvtColor(np.array(frame), cv2.COLOR_BGR2RGB)
+
+start_clip = VideoClip(start_make_frame, duration=start_duration)
+
+PAUSE_PATH = './outputs/pause.png'
+start_clip.save_frame(PAUSE_PATH, t=start_duration)
+pause_clip = ImageClip(PAUSE_PATH, duration=1)
 
 dark_screen_mock = library.darken_image(start_mock)
 
@@ -78,26 +104,19 @@ first_frame_mock.paste(
 line_img = Image.new('RGBA', start_mock.size)
 line_draw = ImageDraw.Draw(line_img, 'RGBA')
 
-frame_rate = 15
-duration = 2
 get_position = library.linear_interpolation(
-    start_coords, first_frame_coords, frame_rate, duration)
-
-CURSOR_PATH = './assets/cursor_icon.png'
-cursor_img = Image.open(CURSOR_PATH).convert('RGBA').resize((30, 30))
-
+    start_coords, first_frame_coords, frame_rate, duration=2)
 
 def make_frame(t):
     frame = first_frame_mock.copy()
     frame.paste(cursor_img, tuple(get_position(t).astype(int)), cursor_img)
     return cv2.cvtColor(np.array(frame), cv2.COLOR_BGR2RGB)
 
-interp_clip = VideoClip(make_frame, duration=duration)
-interp_clip.write_gif("test.gif", fps=frame_rate)
-
-# start mouse on a random spot
+interp_clip = VideoClip(make_frame, duration=2)
 
 final_clip = concatenate_videoclips([
+    start_clip,
+    pause_clip,
     interp_clip,
     popover_on_dark_clip,
 ])
