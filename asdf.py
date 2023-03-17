@@ -1,7 +1,7 @@
 from PIL import Image, ImageDraw
 import numpy as np
 import library
-from moviepy.editor import VideoFileClip, ImageClip, CompositeVideoClip, VideoClip
+from moviepy.editor import VideoFileClip, ImageClip, CompositeVideoClip, VideoClip, concatenate_videoclips
 import cv2
 
 # load mock
@@ -12,13 +12,6 @@ start_mock = Image.open('./slice.png').convert('RGBA')
 
 start_coords = library.get_button_coordinates(
     start_mock, CURSOR_ICON_PATH, image_coords=True, screen_size=start_mock.size)
-
-start_img = Image.new('RGBA', start_mock.size)
-start_draw = ImageDraw.Draw(start_img, 'RGBA')
-start_draw.regular_polygon(
-    (start_coords[0], start_coords[1], 10), 5, fill="black")
-
-start_mock.paste(start_img, (0, 0), start_img)
 
 dark_screen_mock = library.darken_image(start_mock)
 
@@ -82,21 +75,17 @@ first_frame_mock.paste(
      int(first_frame_coords[1]) - 28)  # hack
 )
 
-first_frame_img = Image.new('RGBA', first_frame_mock.size)
-first_frame_draw = ImageDraw.Draw(first_frame_img, 'RGBA')
-first_frame_draw.regular_polygon(
-    (first_frame_coords[0], first_frame_coords[1], 10), 5, fill="black")
-first_frame_mock.paste(first_frame_img, (0, 0), first_frame_img)
-
 line_img = Image.new('RGBA', start_mock.size)
 line_draw = ImageDraw.Draw(line_img, 'RGBA')
 
 frame_rate = 15
 duration = 2
-get_position = library.linear_interpolation(start_coords, first_frame_coords, frame_rate, duration)
+get_position = library.linear_interpolation(
+    start_coords, first_frame_coords, frame_rate, duration)
 
 CURSOR_PATH = './assets/cursor_icon.png'
-cursor_img = Image.open(CURSOR_PATH).convert('RGBA').resize((30,30))
+cursor_img = Image.open(CURSOR_PATH).convert('RGBA').resize((30, 30))
+
 
 def make_frame(t):
     frame = first_frame_mock.copy()
@@ -105,3 +94,12 @@ def make_frame(t):
 
 interp_clip = VideoClip(make_frame, duration=duration)
 interp_clip.write_gif("test.gif", fps=frame_rate)
+
+# start mouse on a random spot
+
+final_clip = concatenate_videoclips([
+    interp_clip,
+    popover_on_dark_clip,
+])
+
+final_clip.write_gif('./test.gif', fps=frame_rate)
