@@ -4,11 +4,19 @@ import cv2
 from sklearn.cluster import KMeans
 from PIL import Image, ImageEnhance
 import matplotlib.pyplot as plt
+import numpy as np
 
 RECORDING_FRAME_RATE = 2.5
 DOCK_MARGIN = 170
 CHROME_AND_TOP_NAV_MARGIN = 234
 CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
+
+'''
+linearly interpolate points on a path
+'''
+def linear_interpolation(start, end, n_points=20):
+    delta = np.array(end) - np.array(start)
+    return [ np.array(start) + delta * i/n_points for i in range(1, n_points + 1)]
 
 '''
 Gets the coordinates of the cluster with the most points.
