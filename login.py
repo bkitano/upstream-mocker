@@ -21,7 +21,7 @@ BLANK_POPOVER_VIDEO_PATH = './assets/login_blank_popover.mov'
 
 DARK_IMAGE_SAVE_PATH = './outputs/dark.png'
 DARK_IMAGE_POPOVER_PATH = './outputs/dark_popover.png'
-
+FIRST_FRAME_PATH = './outputs/login_first_frame.png'
 
 BOX_CENTER = (310, 478)
 FONT_SIZE = 35
@@ -71,10 +71,8 @@ for line in lines:
     y_text += (line_height + LINE_SPACING)
 
 filled_popover.paste(text_img, (0, 0), text_img)
-filled_popover.save(FILLED_POPOVER_IMAGE_PATH)
 
 # ------------------ OVERLAY VIDEO ---------------------
-
 OVERLAY_DURATION = 1.55
 
 # overlay logo, text file on top of blank popover video
@@ -88,25 +86,25 @@ logo_clip = ImageClip(np.array(logo))\
 text_clip = ImageClip(np.array(text_img))\
     .set_duration(OVERLAY_DURATION)
 
-clip = CompositeVideoClip([blank_popover_clip, logo_clip, text_clip])
-# clip.write_videofile('./outputs/filled_popover.avi', fps=12, codec='png') # use this for render
-clip.write_videofile('./outputs/filled_popover.mp4', fps=12,
-                     codec='mpeg4')  # use this for debug
+popover_clip = CompositeVideoClip([blank_popover_clip, logo_clip, text_clip])
 
-# -----------------------
-
-# make a darkened mock
-login_img = Image.open(MOCK_PATH)
+# ----------- DARK SCREEN ------------
+login_img = Image.open(MOCK_PATH).convert("RGBA")
 dark_login_img = library.darken_image(login_img)
-dark_login_img.save(DARK_IMAGE_SAVE_PATH)
+dark_login_with_popover_img = dark_login_img.copy()
 
-# impose the popover
 popover_position = tuple((np.array(login_img.size)/2 -
                          np.array(filled_popover.size)/2).astype(int))
-
-dark_login_img.paste(
+dark_login_with_popover_img.paste(
     filled_popover,
     popover_position
 )
 
-dark_login_img.save(DARK_IMAGE_POPOVER_PATH)
+dark_login_with_popover_img.save(DARK_IMAGE_POPOVER_PATH)
+
+# --------- FIRST FRAME ---------
+background_clip = ImageClip(cv2.cvtColor(
+    np.array(dark_login_img), cv2.COLOR_RGB2BGR), duration=popover_clip.duration)
+popover_on_background_clip = CompositeVideoClip(
+    [background_clip, popover_clip.set_position(("center", "center"))], size=background_clip.size)
+popover_on_background_clip.save_frame(FIRST_FRAME_PATH)
