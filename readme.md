@@ -7,4 +7,6 @@ If you linearly interpolate the mouse movements, you don't need to use the scree
     2. Dark screen with popup, mouse still on original button
     3. Dark screen with popup, mouse at video starting position (first_frame)
 
-Then linearly interpolate the scenes between 1-2 and 2-3. 
+Then linearly interpolate the scenes between 1-2 and 2-3. You'll need 
+1. mocks from each scene without the cursor present.
+2. mocks from each scene with the starting cursor positions.
