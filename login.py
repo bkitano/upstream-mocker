@@ -19,6 +19,10 @@ CURSOR_PATH = './assets/cursor_icon.png'
 BLANK_POPOVER_IMAGE_PATH = './assets/login_masked_popover.png'
 BLANK_POPOVER_VIDEO_PATH = './assets/login_blank_popover.mov'
 
+DARK_IMAGE_SAVE_PATH = './outputs/dark.png'
+DARK_IMAGE_POPOVER_PATH = './outputs/dark_popover.png'
+
+
 BOX_CENTER = (310, 478)
 FONT_SIZE = 35
 TEXT_CENTER = (608, 832)
@@ -28,18 +32,20 @@ BOX_SIZE = (384, 384)
 FRAME_RATE = 12
 
 blank_popover = Image.open(BLANK_POPOVER_IMAGE_PATH).convert('RGBA')
+filled_popover = blank_popover.copy()
 logo = Image.open(LOGO_PATH).convert("RGBA")
 logo = logo.resize(BOX_SIZE)
-logo_position = tuple((np.array(BOX_CENTER) - np.array(BOX_SIZE)/2.).astype(int))
+logo_position = tuple(
+    (np.array(BOX_CENTER) - np.array(BOX_SIZE)/2.).astype(int))
 
-blank_popover.paste(logo, logo_position)
+filled_popover.paste(logo, logo_position)
 
 # overlay text
 other_text = f"""\
 {BUSINESS_NAME} will receive the following: your public business details, trade references, primary email address, and credit profile."""
 
 # draw_image = ImageDraw.Draw(blank_popover)
-text_img = Image.new('RGBA', blank_popover.size)
+text_img = Image.new('RGBA', filled_popover.size)
 draw = ImageDraw.Draw(text_img, 'RGBA')
 regular_font = ImageFont.truetype(FONT_PATH, FONT_SIZE)
 
@@ -61,11 +67,11 @@ for line in lines:
     )
 
     draw.text(line_position, line,
-                    font=regular_font, fill="black", align="center")
+              font=regular_font, fill="black", align="center")
     y_text += (line_height + LINE_SPACING)
 
-blank_popover.paste(text_img, (0,0), text_img)
-blank_popover.save(FILLED_POPOVER_IMAGE_PATH)
+filled_popover.paste(text_img, (0, 0), text_img)
+filled_popover.save(FILLED_POPOVER_IMAGE_PATH)
 
 # ------------------ OVERLAY VIDEO ---------------------
 
@@ -84,4 +90,23 @@ text_clip = ImageClip(np.array(text_img))\
 
 clip = CompositeVideoClip([blank_popover_clip, logo_clip, text_clip])
 # clip.write_videofile('./outputs/filled_popover.avi', fps=12, codec='png') # use this for render
-clip.write_videofile('./outputs/filled_popover.mp4', fps=12, codec='mpeg4') # use this for debug
+clip.write_videofile('./outputs/filled_popover.mp4', fps=12,
+                     codec='mpeg4')  # use this for debug
+
+# -----------------------
+
+# make a darkened mock
+login_img = Image.open(MOCK_PATH)
+dark_login_img = library.darken_image(login_img)
+dark_login_img.save(DARK_IMAGE_SAVE_PATH)
+
+# impose the popover
+popover_position = tuple((np.array(login_img.size)/2 -
+                         np.array(filled_popover.size)/2).astype(int))
+
+dark_login_img.paste(
+    filled_popover,
+    popover_position
+)
+
+dark_login_img.save(DARK_IMAGE_POPOVER_PATH)
