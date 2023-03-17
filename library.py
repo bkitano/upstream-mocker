@@ -14,9 +14,15 @@ CHROME_PATH = 'open -a /Applications/Google\ Chrome.app %s'
 '''
 linearly interpolate points on a path
 '''
-def linear_interpolation(start, end, n_points=20):
+def linear_interpolation(start, end, frame_rate=20, duration=2):
     delta = np.array(end) - np.array(start)
-    return [ np.array(start) + delta * i/n_points for i in range(1, n_points + 1)]
+    n_points = frame_rate * duration
+
+    def get_position(t):
+        displacement = np.array(start) + t/duration * delta
+        return displacement
+    
+    return get_position
 
 '''
 Gets the coordinates of the cluster with the most points.
