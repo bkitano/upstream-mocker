@@ -16,8 +16,9 @@ FONT_PATH = './assets/Inter/static/Inter-Regular.ttf'
 
 UPSTREAM_LOGO_PATH = './assets/upstream_logo.png'
 CURSOR_PATH = './assets/cursor_icon.png'
-BLANK_POPOVER_IMAGE_PATH = './assets/login_masked_popover.png'
+BLANK_POPOVER_IMAGE_PATH = './assets/login_blank_popover.png'
 BLANK_POPOVER_VIDEO_PATH = './assets/login_blank_popover.mov'
+LOGIN_QUERY_CURSOR_PATH = './assets/login_popover_cursor.png'
 
 INITIAL_PAUSE_PATH = './outputs/login_initial_pause.png'
 PAUSE_PATH = './outputs/login_pause.png'
@@ -81,7 +82,7 @@ OVERLAY_DURATION = 1.55
 blank_popover_clip = VideoFileClip(BLANK_POPOVER_VIDEO_PATH)
 blank_popover_clip = blank_popover_clip.resize(blank_popover.size)
 
-logo_clip = ImageClip(np.array(logo))\
+logo_clip = ImageClip(cv2.cvtColor(np.array(logo), cv2.COLOR_BGR2BGRA))\
     .set_position(logo_position)\
     .set_duration(OVERLAY_DURATION)
 
@@ -106,7 +107,7 @@ dark_login_with_popover_img.save(DARK_IMAGE_POPOVER_PATH)
 
 # --------- FIRST FRAME ---------
 background_clip = ImageClip(cv2.cvtColor(
-    np.array(dark_login_img), cv2.COLOR_RGB2BGR), duration=popover_clip.duration)
+    np.array(dark_login_img), cv2.COLOR_BGR2RGB), duration=popover_clip.duration)
 popover_on_background_clip = CompositeVideoClip(
     [background_clip, popover_clip.set_position(("center", "center"))], size=background_clip.size)
 popover_on_background_clip.save_frame(FIRST_FRAME_PATH)
@@ -119,17 +120,20 @@ button_coords = library.get_button_coordinates(
     start_mock, UPSTREAM_LOGO_PATH, image_coords=True, screen_size=start_mock.size)
 
 displacement = 100 * np.random.randn(*np.array(button_coords).shape)
-cursor_start_coords = tuple((np.array(button_coords) + displacement).astype(int))
+cursor_start_coords = tuple(
+    (np.array(button_coords) + displacement).astype(int))
 
 start_position = library.linear_interpolation(
     cursor_start_coords, button_coords, start_duration)
 
 cursor_img = Image.open(CURSOR_PATH).convert('RGBA').resize((30, 30))
 
+
 def start_frame(t):
     frame = start_mock.copy()
     frame.paste(cursor_img, tuple(start_position(t).astype(int)), cursor_img)
     return cv2.cvtColor(np.array(frame), cv2.COLOR_BGR2RGB)
+
 
 start_clip = VideoClip(start_frame, duration=start_duration)
 
@@ -138,3 +142,61 @@ initial_pause_clip = ImageClip(INITIAL_PAUSE_PATH, duration=1)
 
 start_clip.save_frame(PAUSE_PATH, t=start_duration)
 pause_clip = ImageClip(PAUSE_PATH, duration=1)
+
+# ---------------- MOVE CURSOR FROM BUTTON TO FIRST FRAME ---------------
+# mask first_frame_mock
+first_frame_mock = Image.open(FIRST_FRAME_PATH).convert("RGBA")
+
+query_first_frame = first_frame_mock.copy()
+left_query_mask_size = (
+    int(query_first_frame.size[0]/2. - popover_clip.size[0]/2.), int(query_first_frame.size[1]))
+query_first_frame.paste(
+    Image.new(size=left_query_mask_size, mode=query_first_frame.mode), (0, 0))
+right_query_mask_size = (
+    int(query_first_frame.size[0]/2. - popover_clip.size[0]/2.), int(query_first_frame.size[1]))
+query_first_frame.paste(
+    Image.new(size=right_query_mask_size, mode=query_first_frame.mode), (int(query_first_frame.size[0]/2. + blank_popover_clip.size[0]/2), 0))
+
+top_query_mask_size = (
+    int(query_first_frame.size[0]), int(query_first_frame.size[1]/2. + 400))
+query_first_frame.paste(
+    Image.new(size=top_query_mask_size, mode=query_first_frame.mode), (0, 0))
+bottom_query_mask_size = (
+    int(query_first_frame.size[0]), int(query_first_frame.size[1]/2. - popover_clip.size[1]/2.))
+query_first_frame.paste(
+    Image.new(size=bottom_query_mask_size, mode=query_first_frame.mode), (0, int(query_first_frame.size[1]/2. + blank_popover_clip.size[1]/2.)))
+
+first_frame_coords = library.get_button_coordinates(
+    query_first_frame,
+    LOGIN_QUERY_CURSOR_PATH,
+    image_coords=True,
+    screen_size=first_frame_mock.size,
+)
+
+move_distance = np.linalg.norm(
+    np.array(button_coords) - np.array(first_frame_coords))
+pixels_per_second = 1200.
+move_duration = move_distance / pixels_per_second
+
+move_position = library.linear_interpolation(
+    button_coords, first_frame_coords, duration=move_duration)
+
+
+def move_frame(t):
+    frame = dark_login_with_popover_img.copy()
+    frame.paste(cursor_img, tuple(move_position(t).astype(int)), cursor_img)
+    return cv2.cvtColor(np.array(frame), cv2.COLOR_BGR2BGRA)
+
+
+move_clip = VideoClip(move_frame, duration=move_duration)
+
+# ----------- STITCH ----------
+final_clip = concatenate_videoclips([
+    initial_pause_clip,
+    start_clip,
+    pause_clip,
+    move_clip,
+    popover_on_background_clip
+]).resize(.5)
+
+final_clip.write_gif(OUTPUT_GIF_PATH, fps=FRAME_RATE)
