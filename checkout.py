@@ -7,12 +7,14 @@ import sys
 
 MOCK_PATH = sys.argv[1]
 OUTPUT_PATH = sys.argv[2]
+
 UPSTREAM_LOGO_PATH = './assets/upstream_logo.png'
 CURSOR_PATH = './assets/cursor_icon.png'
-INITIAL_PAUSE_PATH = './outputs/initial_pause.png'
-PAUSE_PATH = './outputs/pause.png'
+
+INITIAL_PAUSE_PATH = './outputs/checkout_initial_pause.png'
+PAUSE_PATH = './outputs/checkout_pause.png'
 CHECKOUT_POPOVER_PATH = './assets/checkout_popup.mp4'
-FIRST_FRAME_PATH = './outputs/asdf_first_frame.png'
+FIRST_FRAME_PATH = './outputs/checkout_first_frame.png'
 CHECKOUT_QUERY_CURSOR_PATH = './assets/checkout_query_cursor.png'
 
 FRAME_RATE = 12
