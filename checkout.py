@@ -136,6 +136,6 @@ final_clip = concatenate_videoclips([
     pause_clip,
     move_clip,
     popover_on_dark_clip,
-]).resize(.5)
+]).resize(.4)
 
 final_clip.write_gif(OUTPUT_PATH, fps=FRAME_RATE)

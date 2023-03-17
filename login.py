@@ -32,7 +32,7 @@ TEXT_CENTER = (608, 832)
 LINE_SPACING = 15
 BOX_SIZE = (384, 384)
 
-FRAME_RATE = 12
+FRAME_RATE = 10
 
 blank_popover = Image.open(BLANK_POPOVER_IMAGE_PATH).convert('RGBA')
 filled_popover = blank_popover.copy().convert('RGBA')
@@ -197,6 +197,6 @@ final_clip = concatenate_videoclips([
     pause_clip,
     move_clip,
     popover_on_background_clip
-]).resize(.5)
+]).resize(.4)
 
 final_clip.write_gif(OUTPUT_GIF_PATH, fps=FRAME_RATE)
