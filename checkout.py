@@ -15,9 +15,9 @@ CHECKOUT_POPOVER_PATH = './assets/checkout_popup.mp4'
 FIRST_FRAME_PATH = './outputs/asdf_first_frame.png'
 CHECKOUT_QUERY_CURSOR_PATH = './assets/checkout_query_cursor.png'
 
-FRAME_RATE = 8
+FRAME_RATE = 12
 
-print("---------- START SCENE -----------")
+# print("---------- START SCENE -----------")
 start_duration = .2
 
 start_mock = Image.open(MOCK_PATH).convert('RGBA')
@@ -52,7 +52,7 @@ pause_clip = ImageClip(PAUSE_PATH, duration=1)
 
 dark_screen_mock = library.darken_image(start_mock)
 
-print("--------- POPOVER SCENE ----------")
+# print("--------- POPOVER SCENE ----------")
 checkout_popover_clip = VideoFileClip(
     CHECKOUT_POPOVER_PATH, audio=False).resize(1.6)
 dark_screen_clip = ImageClip(cv2.cvtColor(
@@ -66,7 +66,7 @@ popover_on_dark_clip = CompositeVideoClip([
 
 popover_on_dark_clip.save_frame(FIRST_FRAME_PATH)
 
-print("---------- MOVE CURSOR SCENE ------------")
+# print("---------- MOVE CURSOR SCENE ------------")
 first_frame_mock = Image.open(FIRST_FRAME_PATH).convert('RGBA')
 
 # mask first_frame_mock
@@ -134,6 +134,6 @@ final_clip = concatenate_videoclips([
     pause_clip,
     move_clip,
     popover_on_dark_clip,
-])
+]).resize(.5)
 
 final_clip.write_gif('./test.gif', fps=FRAME_RATE)
