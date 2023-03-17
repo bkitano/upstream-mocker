@@ -19,8 +19,10 @@ CURSOR_PATH = './assets/cursor_icon.png'
 BLANK_POPOVER_IMAGE_PATH = './assets/login_masked_popover.png'
 BLANK_POPOVER_VIDEO_PATH = './assets/login_blank_popover.mov'
 
-DARK_IMAGE_SAVE_PATH = './outputs/dark.png'
-DARK_IMAGE_POPOVER_PATH = './outputs/dark_popover.png'
+INITIAL_PAUSE_PATH = './outputs/login_initial_pause.png'
+PAUSE_PATH = './outputs/login_pause.png'
+DARK_IMAGE_SAVE_PATH = './outputs/login_dark.png'
+DARK_IMAGE_POPOVER_PATH = './outputs/login_dark_popover.png'
 FIRST_FRAME_PATH = './outputs/login_first_frame.png'
 
 BOX_CENTER = (310, 478)
@@ -89,11 +91,11 @@ text_clip = ImageClip(np.array(text_img))\
 popover_clip = CompositeVideoClip([blank_popover_clip, logo_clip, text_clip])
 
 # ----------- DARK SCREEN ------------
-login_img = Image.open(MOCK_PATH).convert("RGBA")
-dark_login_img = library.darken_image(login_img)
+start_mock = Image.open(MOCK_PATH).convert("RGBA")
+dark_login_img = library.darken_image(start_mock)
 dark_login_with_popover_img = dark_login_img.copy()
 
-popover_position = tuple((np.array(login_img.size)/2 -
+popover_position = tuple((np.array(start_mock.size)/2 -
                          np.array(filled_popover.size)/2).astype(int))
 dark_login_with_popover_img.paste(
     filled_popover,
@@ -108,3 +110,31 @@ background_clip = ImageClip(cv2.cvtColor(
 popover_on_background_clip = CompositeVideoClip(
     [background_clip, popover_clip.set_position(("center", "center"))], size=background_clip.size)
 popover_on_background_clip.save_frame(FIRST_FRAME_PATH)
+
+# -------------- START CURSOR ON SCREEN AND INTERPOLATE TO UPSTREAM BUTTON ----------------
+start_duration = .2
+start_clip = ImageClip(MOCK_PATH, duration=2)
+
+button_coords = library.get_button_coordinates(
+    start_mock, UPSTREAM_LOGO_PATH, image_coords=True, screen_size=start_mock.size)
+
+displacement = 100 * np.random.randn(*np.array(button_coords).shape)
+cursor_start_coords = tuple((np.array(button_coords) + displacement).astype(int))
+
+start_position = library.linear_interpolation(
+    cursor_start_coords, button_coords, start_duration)
+
+cursor_img = Image.open(CURSOR_PATH).convert('RGBA').resize((30, 30))
+
+def start_frame(t):
+    frame = start_mock.copy()
+    frame.paste(cursor_img, tuple(start_position(t).astype(int)), cursor_img)
+    return cv2.cvtColor(np.array(frame), cv2.COLOR_BGR2RGB)
+
+start_clip = VideoClip(start_frame, duration=start_duration)
+
+start_clip.save_frame(INITIAL_PAUSE_PATH)
+initial_pause_clip = ImageClip(INITIAL_PAUSE_PATH, duration=1)
+
+start_clip.save_frame(PAUSE_PATH, t=start_duration)
+pause_clip = ImageClip(PAUSE_PATH, duration=1)
