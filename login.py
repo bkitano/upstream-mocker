@@ -10,8 +10,8 @@ BUSINESS_NAME = sys.argv[1]
 LOGO_PATH = sys.argv[2]
 MOCK_PATH = sys.argv[3]
 OUTPUT_GIF_PATH = sys.argv[4]
-FILLED_POPOVER_IMAGE_PATH = './outputs/login_filled_popover.png'
 
+FILLED_POPOVER_IMAGE_PATH = './outputs/login_filled_popover.png'
 FONT_PATH = './assets/Inter/static/Inter-Regular.ttf'
 
 UPSTREAM_LOGO_PATH = './assets/upstream_logo.png'
@@ -34,9 +34,9 @@ BOX_SIZE = (384, 384)
 
 FRAME_RATE = 10
 
-blank_popover = Image.open(BLANK_POPOVER_IMAGE_PATH).convert('RGBA')
-filled_popover = blank_popover.copy().convert('RGBA')
-logo = Image.open(LOGO_PATH).convert('RGBA')
+blank_popover = Image.open(BLANK_POPOVER_IMAGE_PATH)
+filled_popover = blank_popover.copy()
+logo = Image.open(LOGO_PATH)
 logo = logo.resize(BOX_SIZE)
 logo_position = tuple(
     (np.array(BOX_CENTER) - np.array(BOX_SIZE)/2.).astype(int))
@@ -82,19 +82,19 @@ OVERLAY_DURATION = 1.55
 blank_popover_clip = VideoFileClip(BLANK_POPOVER_VIDEO_PATH)
 blank_popover_clip = blank_popover_clip.resize(blank_popover.size)
 
-logo_clip = ImageClip(cv2.cvtColor(np.array(logo.convert('RGBA')), cv2.COLOR_BGR2BGRA))\
+logo_clip = ImageClip(np.array(logo))\
     .set_position(logo_position)\
     .set_duration(OVERLAY_DURATION)
 
-text_clip = ImageClip(np.array(text_img.convert('RGBA')))\
+text_clip = ImageClip(np.array(text_img))\
     .set_duration(OVERLAY_DURATION)
 
 popover_clip = CompositeVideoClip([blank_popover_clip, logo_clip, text_clip])
 
 # ----------- DARK SCREEN ------------
-start_mock = Image.open(MOCK_PATH).convert('RGBA')
+start_mock = Image.open(MOCK_PATH)
 dark_login_img = library.darken_image(start_mock)
-dark_login_with_popover_img = dark_login_img.copy().convert('RGBA')
+dark_login_with_popover_img = dark_login_img.copy()
 
 popover_position = tuple((np.array(start_mock.size)/2 -
                          np.array(filled_popover.size)/2).astype(int))
@@ -106,8 +106,8 @@ dark_login_with_popover_img.paste(
 dark_login_with_popover_img.save(DARK_IMAGE_POPOVER_PATH)
 
 # --------- FIRST FRAME ---------
-background_clip = ImageClip(cv2.cvtColor(
-    np.array(dark_login_img), cv2.COLOR_BGR2RGB), duration=popover_clip.duration)
+background_clip = ImageClip(
+    np.array(dark_login_img), duration=popover_clip.duration)
 popover_on_background_clip = CompositeVideoClip(
     [background_clip, popover_clip.set_position(("center", "center"))], size=background_clip.size)
 popover_on_background_clip.save_frame(FIRST_FRAME_PATH)
@@ -132,7 +132,7 @@ cursor_img = Image.open(CURSOR_PATH).resize((30, 30)).convert('RGBA')
 def start_frame(t):
     frame = start_mock.copy()
     frame.paste(cursor_img, tuple(start_position(t).astype(int)), cursor_img)
-    return cv2.cvtColor(np.array(frame.convert('RGBA')), cv2.COLOR_BGR2RGB)
+    return np.array(frame)
 
 
 start_clip = VideoClip(start_frame, duration=start_duration)
@@ -145,9 +145,9 @@ pause_clip = ImageClip(PAUSE_PATH, duration=1)
 
 # ---------------- MOVE CURSOR FROM BUTTON TO FIRST FRAME ---------------
 # mask first_frame_mock
-first_frame_mock = Image.open(FIRST_FRAME_PATH).convert('RGBA')
+first_frame_mock = Image.open(FIRST_FRAME_PATH)
 
-query_first_frame = first_frame_mock.copy().convert('RGBA')
+query_first_frame = first_frame_mock.copy()
 left_query_mask_size = (
     int(query_first_frame.size[0]/2. - popover_clip.size[0]/2.), int(query_first_frame.size[1]))
 query_first_frame.paste(
@@ -185,7 +185,7 @@ move_position = library.linear_interpolation(
 def move_frame(t):
     frame = dark_login_with_popover_img.copy()
     frame.paste(cursor_img, tuple(move_position(t).astype(int)), cursor_img)
-    return cv2.cvtColor(np.array(frame.convert('RGBA')), cv2.COLOR_BGR2BGRA)
+    return np.array(frame)
 
 
 move_clip = VideoClip(move_frame, duration=move_duration)
