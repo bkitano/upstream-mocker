@@ -11,7 +11,7 @@ for logo in logo_paths:
     company_name = logo.split('-')[0].split('/')[-1]
     formatted_company_name = " ".join([
         str.capitalize(token) for token in company_name.split("_")
-    ])
+    ]).strip()
     formatted_company_name = formatted_company_name.replace(" ", "\\ ")
 
     mocks = [file for file in files_with_parent_path if (
