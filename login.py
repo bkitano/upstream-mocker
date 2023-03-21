@@ -37,7 +37,17 @@ FRAME_RATE = 10
 blank_popover = Image.open(BLANK_POPOVER_IMAGE_PATH)
 filled_popover = blank_popover.copy()
 logo = Image.open(LOGO_PATH)
-logo.thumbnail(BOX_SIZE)
+
+original_logo_size = np.array(logo.size)
+box_size = np.array(BOX_SIZE)
+size_difference = original_logo_size - box_size
+if np.all(size_difference < 0):
+    ratio = np.min(box_size / original_logo_size)
+    new_size = (original_logo_size * ratio).astype(int)
+    logo = logo.resize(tuple(new_size))
+else:
+    logo.thumbnail(BOX_SIZE)
+
 logo_position = tuple(
     (np.array(BOX_CENTER) - np.array(logo.size)/2.).astype(int)
 )
