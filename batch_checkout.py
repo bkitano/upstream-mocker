@@ -6,7 +6,7 @@ files = os.listdir(MOCKS_PATH)
 
 args = []
 for file in files:
-    if file.split(".") == 'png':
+    if file.split(".")[-1] == 'png':
         name = file.split("-")[0]
         args += [(f"{MOCKS_PATH}{file}", f"{OUTPUT_PATH}{name}.gif")]
 
