@@ -7,10 +7,11 @@ files_with_parent_path = [f"{NEW_CONNECT_MOCKS_DIR}{file}" for file in files]
 logo_paths = [file for file in files_with_parent_path if file.split('-')[-1] == 'logo.png']
 
 args = []
+
 for logo in logo_paths:
     company_name = logo.split('-')[0].split('/')[-1]
     formatted_company_name = " ".join([
-        str.capitalize(token) for token in company_name.split("_")
+        str.capitalize(token) for token in company_name.split("_") if not token.isupper()
     ]).strip()
     formatted_company_name = formatted_company_name.replace(" ", "\\ ")
 
